@@ -5,17 +5,30 @@ import { HomeScreen } from "./nestedScreens/HomeScreen";
 import { CommentsScreen } from "./nestedScreens/CommentsScreen";
 import { MapScreen } from "./nestedScreens/MapScreen";
 import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { authSignOutUser } from "./../redux/auth/authOperations";
+import { PostsScreen } from "./nestedScreens/PostsScreen";
+import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+
 const NestedScreen = createStackNavigator();
-TouchableOpacity;
-export const ProfileScreen = () => {
+
+export const PostsScreenNested = () => {
+  const dispatch = useDispatch();
+  const logout = () => dispatch(authSignOutUser());
   return (
     <NestedScreen.Navigator>
       <NestedScreen.Screen
-        options={{ headerShown: false }}
-        name="Home"
-        component={HomeScreen}
+        options={{
+          title: "Posts",
+          headerRight: () => (
+            <TouchableOpacity style={{ marginRight: 16 }} onPress={logout}>
+              <MaterialIcons name="logout" size={24} color="#8F8F8F" />
+            </TouchableOpacity>
+          ),
+        }}
+        name="All Posts"
+        component={PostsScreen}
       />
       <NestedScreen.Screen
         name="Comments"

@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AntDesign, Ionicons, Feather } from "@expo/vector-icons";
-
+import { HeaderBackButton } from "@react-navigation/elements";
 import { TouchableOpacity, View, Image } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import RegistrationScreen from "./Screens/RegistrationScreen";
@@ -14,7 +14,7 @@ import db from "./firebase/config";
 import { authSignOutUser } from "./redux/auth/authOperations";
 import { useDispatch } from "react-redux";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-
+import { PostsScreenNested } from "./Screens/PostsScreenNested";
 const Stack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
@@ -41,136 +41,102 @@ export const useRoute = (isLoggedIn) => {
   }
 
   return (
-    <MainTab.Navigator tabBarOptions={{ showLabel: false }}>
-      <MainTab.Screen
-        options={{
-          tabBarIcon: ({ focused, size, color }) => (
-            <AntDesign
-              name="appstore-o"
-              size={size}
-              color={focused ? "#fff" : "#4D4D4D"}
-            />
-          ),
-          headerTitleAlign: "center",
+    <MainTab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarActiveBackgroundColor: "#FF6C00",
+        tabBarStyle: {
+          height: 80,
+          // paddingTop: 30,
+          // marginTop: 40,
+        },
+        headerShown: true,
+        headerLeftContainerStyle: {
+          paddingLeft: 16,
+        },
+        headerRightContainerStyle: {
+          paddingRight: 16,
+        },
+        headerTitleStyle: {
+          color: "#212121",
 
-          tabBarActiveBackgroundColor: "#FF6C00",
-          tabBarInactiveBackgroundColor: "#fff",
-          tabBarStyle: {
-            height: 80,
-          },
-          tabBarItemStyle: {
-            alignSelf: "center",
-            width: 70,
-            height: 40,
-            borderRadius: 20,
-            marginLeft: 90,
-          },
+          fontSize: 17,
+        },
+        tabBarItemStyle: {
+          height: 40,
+          width: 70,
+          paddingHorizontal: 30,
+          marginLeft: 25,
+          marginRight: 25,
+          borderRadius: 20,
 
-          headerRight: () => (
-            <View style={{ marginRight: 20 }}>
-              <TouchableOpacity
-                style={{ height: 20 }}
-                onPress={signOut}
-                color="green"
-                title="sign-out"
-              >
-                <Image source={require("./images/svg/log-out.png")} />
-              </TouchableOpacity>
-            </View>
-          ),
-        }}
-        name="Posts"
-        component={PostsScreen}
-      />
-      <MainTab.Screen
-        options={({ navigation }) => ({
-          tabBarIcon: ({ focused, size, color }) => (
-            <Ionicons
-              name="add"
-              size={30}
-              color={focused ? "#fff" : "#4D4D4D"}
-            />
-          ),
-          tabBarHideOnKeyboard: true,
-          headerTitleAlign: "center",
-          tabBarActiveBackgroundColor: "#FF6C00",
-          tabBarInactiveBackgroundColor: "#fff",
-          tabBarStyle: {
-            height: 80,
-            display: "none",
-          },
-          tabBarItemStyle: {
-            alignSelf: "center",
-            width: 70,
-            height: 40,
-            borderRadius: 20,
-          },
-          headerLeft: ({ focused }) => (
-            <View style={{ marginLeft: 20 }}>
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <AntDesign
-                  name="arrowleft"
-                  size={24}
-                  color={focused ? "#fff" : "#4D4D4D"}
-                />
-              </TouchableOpacity>
-            </View>
-          ),
-          headerRight: () => (
-            <View style={{ marginRight: 20 }}>
-              <TouchableOpacity
-                style={{ height: 20 }}
-                onPress={signOut}
-                color="green"
-                title="sign-out"
-              >
-                <Image source={require("./images/svg/log-out.png")} />
-              </TouchableOpacity>
-            </View>
-          ),
-        })}
-        name="Create post"
-        component={CreatePostsScreen}
-      />
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      }}
+    >
       <MainTab.Screen
         options={({ route }) => ({
-          tabBarIcon: ({ focused, size, color }) => (
-            <Feather
-              name="user"
-              size={size}
-              color={focused ? "#fff" : "#4D4D4D"}
-            />
-          ),
-          headerShown: false,
-          headerTitleAlign: "center",
-          tabBarActiveBackgroundColor: "#FF6C00",
-          tabBarInactiveBackgroundColor: "#fff",
-
           tabBarStyle: ((route) => {
             const routeName = getFocusedRouteNameFromRoute(route) ?? "";
             if (routeName === "Comments" || routeName === "Map") {
               return { display: "none" };
             }
-            return { height: 80 };
+            return { height: 80, paddingTop: 20, paddingLeft: 20 };
           })(route),
-          tabBarItemStyle: {
-            alignSelf: "center",
-            width: 70,
-            height: 40,
-            borderRadius: 20,
-            marginRight: 90,
+          headerShown: false,
+          tabBarIcon: ({ focused, size }) => (
+            <AntDesign
+              name="appstore-o"
+              size={size}
+              color={focused ? "#fff" : "#8F8F8F"}
+            />
+          ),
+        })}
+        name="Posts"
+        component={PostsScreenNested}
+      />
+      <MainTab.Screen
+        options={({ navigation }) => ({
+          title: "Create a post",
+          headerLeft: () => (
+            <HeaderBackButton
+              onPress={() => navigation.navigate("Posts", { screen: "Posts" })}
+              backImage={() => (
+                <AntDesign name="arrowleft" size={27} color="#8F8F8F" />
+              )}
+            />
+          ),
+          tabBarIcon: ({ focused, size }) => (
+            <AntDesign
+              name="plus"
+              size={size}
+              color={focused ? "#fff" : "#8F8F8F"}
+            />
+          ),
+          tabBarStyle: {
+            display: "none",
           },
-          headerRight: () => (
-            <View style={{ marginRight: 20 }}>
-              <TouchableOpacity
-                style={{ height: 20 }}
-                onPress={signOut}
-                color="green"
-                title="sign-out"
-              >
-                <Image source={require("./images/svg/log-out.png")} />
-              </TouchableOpacity>
-            </View>
+        })}
+        name="Create"
+        component={CreatePostsScreen}
+      />
+      <MainTab.Screen
+        options={({ route }) => ({
+          tabBarStyle: ((route) => {
+            const routeName = getFocusedRouteNameFromRoute(route) ?? "";
+            if (routeName === "Comments" || routeName === "Map") {
+              return { display: "none" };
+            }
+            return { height: 80, paddingTop: 20, paddingRight: 20 };
+          })(route),
+          headerShown: false,
+          tabBarIcon: ({ focused, size }) => (
+            <Feather
+              name="user"
+              size={size}
+              color={focused ? "#fff" : "#8F8F8F"}
+            />
           ),
         })}
         name="Profile"

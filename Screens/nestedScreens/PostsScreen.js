@@ -73,11 +73,15 @@ export const PostsScreen = ({ navigation }) => {
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() =>
-                navigation.navigate("Comments", {
-                  postId: item.id,
-                  photo: item.photoToSever,
-                  allComments: item.comments,
-                })
+                navigation.navigate(
+                  "Comments",
+
+                  {
+                    postId: item.id,
+                    photo: item.photoToSever,
+                    allComments: item.comments,
+                  }
+                )
               }
             >
               <Image
@@ -97,7 +101,7 @@ export const PostsScreen = ({ navigation }) => {
                   onPress={() =>
                     navigation.navigate(
                       "Comments",
-                      { screen: "Profile" },
+
                       {
                         postId: item.id,
                         photo: item.photoToSever,
