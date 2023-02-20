@@ -12,22 +12,30 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-
+import { authSignUpUser } from "../redux/auth/authOperations";
 import { useState } from "react";
 import React from "react";
+import { useDispatch } from "react-redux";
+const initialState = {
+  login: "",
+  email: "",
 
+  password: "",
+};
 export default function RegistrationScreen({ navigation }) {
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [state, setState] = useState(initialState);
+  // const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
   const [isHidden, setIsHidden] = useState(false);
-
-  const loginHandler = (text) => setLogin(text);
-  const passwordHandler = (text) => setPassword(text);
-  const emailHandler = (text) => setEmail(text);
+  const dispatch = useDispatch();
+  // const loginHandler = (text) => setLogin(text);
+  // const passwordHandler = (text) => setPassword(text);
+  // const emailHandler = (text) => setEmail(text);
 
   const onLogin = () => {
-    Alert.alert("Credentials", `${login} + ${email} + ${password}`);
+    dispatch(authSignUpUser(state));
+    console.log(state);
+    setState(initialState);
   };
 
   return (
@@ -57,8 +65,10 @@ export default function RegistrationScreen({ navigation }) {
                 }}
               >
                 <TextInput
-                  value={login}
-                  onChangeText={loginHandler}
+                  value={state.login}
+                  onChangeText={(value) => {
+                    setState((prevState) => ({ ...prevState, login: value }));
+                  }}
                   placeholder="Login"
                   style={styles.input}
                   autoComplete="username"
@@ -66,8 +76,10 @@ export default function RegistrationScreen({ navigation }) {
                   onBlur={() => setIsHidden(!isHidden)}
                 />
                 <TextInput
-                  value={email}
-                  onChangeText={emailHandler}
+                  value={state.email}
+                  onChangeText={(value) => {
+                    setState((prevState) => ({ ...prevState, email: value }));
+                  }}
                   placeholder="Email"
                   autoComplete="email"
                   style={styles.input}
@@ -75,8 +87,13 @@ export default function RegistrationScreen({ navigation }) {
                   onBlur={() => setIsHidden(!isHidden)}
                 />
                 <TextInput
-                  value={password}
-                  onChangeText={passwordHandler}
+                  value={state.password}
+                  onChangeText={(value) => {
+                    setState((prevState) => ({
+                      ...prevState,
+                      password: value,
+                    }));
+                  }}
                   placeholder="Password"
                   secureTextEntry={true}
                   style={styles.input}

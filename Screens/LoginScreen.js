@@ -15,18 +15,28 @@ import {
 
 import { useState } from "react";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "./../redux/auth/authOperations";
 
+const initialState = {
+  email: "",
+
+  password: "",
+};
 export default function LoginScreen({ navigation }) {
   // const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
   const [isHidden, setIsHidden] = useState(false);
   //   const loginHandler = (text) => setLogin(text);
-  const passwordHandler = (text) => setPassword(text);
-  const emailHandler = (text) => setEmail(text);
-
+  // const passwordHandler = (text) => setPassword(text);
+  // const emailHandler = (text) => setEmail(text);
+  const [state, setState] = useState(initialState);
+  const dispatch = useDispatch();
   const onLogin = () => {
-    Alert.alert("Credentials", `${email} + ${password}`);
+    dispatch(authSignInUser(state));
+    console.log(state);
+    setState(initialState);
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -48,8 +58,10 @@ export default function LoginScreen({ navigation }) {
                 }}
               >
                 <TextInput
-                  value={email}
-                  onChangeText={emailHandler}
+                  value={state.email}
+                  onChangeText={(value) => {
+                    setState((prevState) => ({ ...prevState, email: value }));
+                  }}
                   placeholder="Email"
                   autoComplete="email"
                   style={styles.input}
@@ -57,8 +69,13 @@ export default function LoginScreen({ navigation }) {
                   onBlur={() => setIsHidden(!isHidden)}
                 />
                 <TextInput
-                  value={password}
-                  onChangeText={passwordHandler}
+                  value={state.password}
+                  onChangeText={(value) => {
+                    setState((prevState) => ({
+                      ...prevState,
+                      password: value,
+                    }));
+                  }}
                   placeholder="Password"
                   secureTextEntry={true}
                   style={styles.input}

@@ -1,9 +1,14 @@
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
-import { useRoute } from "./router";
+import { useState, useEffect, useCallback } from "react";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+
+// import { AppLoading } from "expo";
+import * as Font from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import {
   StyleSheet,
-  // View,
+  View,
   // TextInput,
   // TouchableWithoutFeedback,
   // Keyboard,
@@ -15,9 +20,48 @@ import {
   // Text,
 } from "react-native";
 
+import { Main } from "./components/Main";
+// const loadApplication = async () => {
+//   await Font.loadAsync({
+//     Roboto: require("./assets/fonts/Roboto-Regular.ttf"),
+//   });
+// };
+// SplashScreen.preventAutoHideAsync();
+
 export default function App() {
-  const routing = useRoute(true);
-  return <NavigationContainer>{routing}</NavigationContainer>;
+  const [iasReady, setIasReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await Font.loadAsync({
+          "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+          // "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttfttf"),
+          // "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIasReady(true);
+      }
+    }
+    prepare();
+  }, []);
+  const onLayoutRootView = useCallback(async () => {
+    if (iasReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [iasReady]);
+  if (!iasReady) {
+    return null;
+  }
+  return (
+    <Provider store={store}>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <Main />
+      </View>
+    </Provider>
+  );
 }
 
 // const styles = StyleSheet.create({

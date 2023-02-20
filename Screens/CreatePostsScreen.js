@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Image,
@@ -10,24 +10,91 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
 } from "react-native";
+import * as Location from "expo-location";
 import { Camera } from "expo-camera";
+import { MapScreen } from "./nestedScreens/MapScreen";
+import db from "../firebase/config";
+import { useSelector } from "react-redux";
 
 export const CreatePostsScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [description, setDescription] = useState("");
+  const [place, setPlace] = useState("");
   const [image, setImage] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [readyToSend, setReadyToSend] = useState(true);
+  const { userId, login } = useSelector((state) => state.auth);
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permision to access location denied");
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  useEffect(() => {
+    const inputsFilledIn = image !== null && place !== "" && description !== "";
+    setReadyToSend(!inputsFilledIn);
+  }, [image, place, description]);
+
   const takePicture = async () => {
     const photo = await camera.takePictureAsync();
-    console.log(photo.uri);
+
     setImage(photo.uri);
   };
+
   const clearInput = (val) => {
     setDescription("");
+    setPlace("");
   };
   const descriptionHandler = (text) => setDescription(text);
-  const sendPhoto = () => {
-    navigation.navigate("Profile", { image, description });
-    console.log(navigation);
+  const sendPhoto = async () => {
+    uploadPhotoToServer();
+    navigation.navigate(
+      "Profile",
+      { screen: "Home" },
+      {
+        image,
+        description,
+        place,
+        location,
+      }
+    );
+    uploadPostToServer();
+  };
+
+  const uploadPhotoToServer = async () => {
+    const response = await fetch(image);
+    const file = await response.blob();
+    const uniquePostId = Date.now().toString();
+    await db.storage().ref(`postImage/${uniquePostId}`).put(file);
+    const processedPhoto = await db
+      .storage()
+      .ref(`postImage`)
+      .child(uniquePostId)
+      .getDownloadURL();
+    return processedPhoto;
+  };
+
+  const uploadPostToServer = async () => {
+    const postDate = new Date();
+    const photoToSever = await uploadPhotoToServer();
+    await db.firestore().collection("posts").add({
+      photoToSever,
+      description,
+      location: location.coords,
+      userId,
+      login,
+      place: place,
+      postDate: postDate.toLocaleString(),
+      comments: [],
+    });
+  };
+  const handleLocation = (value) => {
+    setPlace(value);
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -76,8 +143,8 @@ export const CreatePostsScreen = ({ navigation }) => {
               source={require("../images/svg/add-location-icon.png")}
             />
             <TextInput
-              // value={location}
-              // onChangeText={locationHandler}
+              value={place}
+              onChangeText={handleLocation}
               placeholder="Location"
               placeholderTextColor={"#BDBDBD"}
               style={styles.createPostInput}
@@ -88,10 +155,22 @@ export const CreatePostsScreen = ({ navigation }) => {
           onPress={() => {
             sendPhoto(), clearInput();
           }}
-          style={styles.submitPost}
+          disabled={readyToSend}
+          style={{
+            ...styles.submitPost,
+            backgroundColor: !readyToSend ? "#FF6C00" : "#F6F6F6",
+          }}
         >
-          <Text style={styles.publishTextStyle}>Publish</Text>
+          <Text
+            style={{
+              ...styles.publishTextStyle,
+              color: !readyToSend ? "#fff" : "#BDBDBD",
+            }}
+          >
+            Publish
+          </Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.removePostBtn}>
           <Image source={require("../images/svg/trash-bin-icon.png")} />
         </TouchableOpacity>
@@ -110,6 +189,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   picPlaceholder: {
+    fontFamily: "Roboto-Regular",
     width: "100%",
     height: 240,
     borderRadius: 8,
@@ -143,6 +223,7 @@ const styles = StyleSheet.create({
     marginRight: 135,
   },
   createPostTextStyle: {
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     alignSelf: "flex-start",
@@ -155,6 +236,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   createPostInput: {
+    fontFamily: "Roboto-Regular",
     // color: "#BDBDBD",
     width: "100%",
     fontSize: 16,
@@ -184,6 +266,7 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   publishTextStyle: {
+    fontFamily: "Roboto-Regular",
     textAlign: "center",
     color: "#BDBDBD",
   },
