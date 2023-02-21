@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import db from "../../firebase/config";
 import { FontAwesome, AntDesign, EvilIcons } from "@expo/vector-icons";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export const HomeScreen = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);

@@ -56,7 +56,9 @@ export const PostsScreen = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
         <View style={styles.itemViewBox}>
           <ImageBackground
-            source={require("../../images/svg/user-photo.png")}
+            source={{
+              uri: "https://armineh.files.wordpress.com/2019/10/photo-1479936343636-73cdc5aae0c3.jpg?w=720",
+            }}
             style={styles.userImage}
           ></ImageBackground>
           <View style={styles.textWrap}>

@@ -102,7 +102,9 @@ export const CommentsScreen = ({ route }) => {
                       >
                         <ImageBackground
                           style={styles.avatar}
-                          source={require("../../images/svg/user-photo.png")}
+                          source={{
+                            uri: "https://armineh.files.wordpress.com/2019/10/photo-1479936343636-73cdc5aae0c3.jpg?w=720",
+                          }}
                         />
                       </View>
                       <View

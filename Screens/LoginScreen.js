@@ -7,8 +7,6 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
   Platform,
-  Alert,
-  Button,
   Text,
   TouchableOpacity,
 } from "react-native";
@@ -24,13 +22,8 @@ const initialState = {
   password: "",
 };
 export default function LoginScreen({ navigation }) {
-  // const [login, setLogin] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [email, setEmail] = useState("");
   const [isHidden, setIsHidden] = useState(false);
-  //   const loginHandler = (text) => setLogin(text);
-  // const passwordHandler = (text) => setPassword(text);
-  // const emailHandler = (text) => setEmail(text);
+
   const [state, setState] = useState(initialState);
   const dispatch = useDispatch();
   const onLogin = () => {
@@ -115,9 +108,6 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    // alignItems: "center",
-    // justifyContent: "center",
   },
   viewBox: {
     backgroundColor: "#fff",
@@ -126,23 +116,17 @@ const styles = StyleSheet.create({
     marginTop: "auto",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    // alignContent: "flex-end",
     paddingLeft: 16,
     paddingRight: 16,
-    // flex: 1,
+
     justifyContent: "center",
   },
-  // container: {
-  //   flex: 1,
+
   image: {
     flex: 1,
     resizeMode: "cover",
-    // justifyContent: "center",
-    // alignItems: "center",
   },
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  // },
+
   inputBox: {
     marginBottom: 32,
   },
@@ -162,17 +146,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 
-  // image: {
-  //   flex: 1,
-  //   justifyContent: "center",
-  // },
   text: {
     color: "white",
     fontSize: 42,
     lineHeight: 84,
     fontWeight: "bold",
     textAlign: "center",
-    // backgroundColor: "#000000c0",
   },
   titleBox: {
     marginBottom: 33,
@@ -221,9 +200,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 14,
     right: -11,
-    // // justifyContent: "center",
-    // alignItems: "center",
-    // alignContent: "center",
   },
   btnRectangle: {
     fontSize: 20,

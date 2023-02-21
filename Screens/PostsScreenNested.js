@@ -1,10 +1,7 @@
 import React from "react";
-// import { moduleName } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { HomeScreen } from "./nestedScreens/HomeScreen";
 import { CommentsScreen } from "./nestedScreens/CommentsScreen";
 import { MapScreen } from "./nestedScreens/MapScreen";
-import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { authSignOutUser } from "./../redux/auth/authOperations";
 import { PostsScreen } from "./nestedScreens/PostsScreen";

@@ -7,12 +7,11 @@ import {
   Keyboard,
   StyleSheet,
   TextInput,
-  KeyboardAvoidingView,
   TouchableOpacity,
 } from "react-native";
 import * as Location from "expo-location";
 import { Camera } from "expo-camera";
-import { MapScreen } from "./nestedScreens/MapScreen";
+
 import db from "../firebase/config";
 import { useSelector } from "react-redux";
 

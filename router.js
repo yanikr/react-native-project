@@ -1,16 +1,12 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AntDesign, Ionicons, Feather } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { HeaderBackButton } from "@react-navigation/elements";
-import { TouchableOpacity, View, Image } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
-import { PostsScreen } from "./Screens/nestedScreens/PostsScreen";
 import { CreatePostsScreen } from "./Screens/CreatePostsScreen";
 import { ProfileScreen } from "./Screens/ProfileScreen";
-// import { MapScreen } from "./Screens/nestedScreens/MapScreen";
-import db from "./firebase/config";
 import { authSignOutUser } from "./redux/auth/authOperations";
 import { useDispatch } from "react-redux";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
@@ -47,8 +43,6 @@ export const useRoute = (isLoggedIn) => {
         tabBarActiveBackgroundColor: "#FF6C00",
         tabBarStyle: {
           height: 80,
-          // paddingTop: 30,
-          // marginTop: 40,
         },
         headerShown: true,
         headerLeftContainerStyle: {
@@ -145,6 +139,3 @@ export const useRoute = (isLoggedIn) => {
     </MainTab.Navigator>
   );
 };
-// {
-//   /* <MainTab.Screen name="Map" component={MapScreen} />; */
-// }

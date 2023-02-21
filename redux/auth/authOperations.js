@@ -1,4 +1,3 @@
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import db from "../../firebase/config";
 import { authSlice } from "./authReducer";
 
